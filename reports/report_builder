@@ -1,0 +1,39 @@
+from reports.report_utils import (
+    get_summary
+)
+
+from reports.report_insights import (
+    generate_insights
+)
+
+from reports.pdf_generator import (
+    generate_pdf
+)
+
+from reports.excel_generator import (
+    generate_excel
+)
+
+def build_reports(df):
+
+    summary = get_summary(df)
+
+    pdf_path = generate_pdf(summary)
+
+    excel_path = generate_excel(df)
+
+    insights = generate_insights(df)
+
+    with open(
+        "reports/generated_reports/ai_summary.txt",
+        "w"
+    ) as file:
+
+        file.write(insights)
+
+    return {
+
+        "pdf": pdf_path,
+        "excel": excel_path,
+        "insights": insights
+    }
