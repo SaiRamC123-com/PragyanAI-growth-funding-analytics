@@ -1,34 +1,21 @@
 import streamlit as st
 import pandas as pd
 
-st.title("🧠 AI Insights")
+from utils.insights import generate_business_insights
 
-df = pd.read_csv("data/startup_data.csv")
+st.title("AI Insights")
 
-best_industry = df.groupby(
-    "Industry"
-)["Revenue (M USD)"].mean().idxmax()
-
-st.success(
-    f"Highest Revenue Industry: {best_industry}"
+uploaded_file = st.file_uploader(
+    "Upload Dataset",
+    type=["csv"]
 )
 
-best_region = df.groupby(
-    "Region"
-)["Valuation (M USD)"].mean().idxmax()
+if uploaded_file:
 
-st.info(
-    f"Highest Valuation Region: {best_region}"
-)
+    df = pd.read_csv(uploaded_file)
 
-st.write("""
-### Recommendations
+    insights = generate_business_insights(df)
 
-• Invest in high valuation industries
+    for insight in insights:
 
-• Focus on profitable startups
-
-• Target regions with high revenue growth
-
-• Scale employee productivity
-""")
+        st.info(insight)
