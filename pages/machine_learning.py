@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
 
-from src.ml.model_trainer import ModelTrainer
+from utils.ml_models import train_all_models
 
-st.title("Machine Learning Dashboard")
+st.title("Machine Learning Studio")
 
 uploaded_file = st.file_uploader(
-    "Upload CSV",
+    "Upload Dataset",
     type=["csv"]
 )
 
@@ -14,26 +14,34 @@ if uploaded_file:
 
     df = pd.read_csv(uploaded_file)
 
-    st.write(df.head())
+    st.dataframe(df.head())
 
     target = st.selectbox(
-        "Select Target Column",
+        "Target Column",
         df.columns
     )
 
     if st.button("Train Models"):
 
-        trainer = ModelTrainer(
+        results = train_all_models(
             df,
             target
         )
 
-        results = trainer.train_models()
-
-        st.subheader("Model Comparison")
+        st.subheader("Model Leaderboard")
 
         st.dataframe(results)
 
         st.bar_chart(
             results.set_index("Model")
+        )
+
+        best_model = results.sort_values(
+            "Accuracy",
+            ascending=False
+        ).iloc[0]
+
+        st.success(
+            f"Best Model: {best_model['Model']} "
+            f"({best_model['Accuracy']}%)"
         )
