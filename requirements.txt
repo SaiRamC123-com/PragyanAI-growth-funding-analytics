@@ -1,7 +1,12 @@
 streamlit
-pandas 
-numpy 
-matplotlib 
-plotly 
-seaborn 
+pandas
+numpy
 scikit-learn
+matplotlib
+plotly
+seaborn
+xgboost
+lightgbm
+catboost
+shap
+joblib
