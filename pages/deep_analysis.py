@@ -1,15 +1,10 @@
 import streamlit as st
 import pandas as pd
 
-from src.analytics.deep_analysis import (
-    dataset_summary,
-    correlation_analysis
-)
-
 st.title("Deep Analytics")
 
 uploaded_file = st.file_uploader(
-    "Upload Dataset",
+    "Upload CSV",
     type=["csv"]
 )
 
@@ -17,14 +12,30 @@ if uploaded_file:
 
     df = pd.read_csv(uploaded_file)
 
-    st.subheader("Dataset Summary")
+    st.subheader("Dataset Shape")
 
-    st.json(
-        dataset_summary(df)
+    st.write(df.shape)
+
+    st.subheader("Missing Values")
+
+    st.write(df.isnull().sum())
+
+    st.subheader("Duplicate Rows")
+
+    st.write(df.duplicated().sum())
+
+    st.subheader("Statistical Summary")
+
+    st.dataframe(
+        df.describe()
     )
 
     st.subheader("Correlation Matrix")
 
+    numeric_df = df.select_dtypes(
+        include="number"
+    )
+
     st.dataframe(
-        correlation_analysis(df)
+        numeric_df.corr()
     )
